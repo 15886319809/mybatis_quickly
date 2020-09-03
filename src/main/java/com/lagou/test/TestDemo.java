@@ -1,5 +1,7 @@
 package com.lagou.test;
 
+import com.lagou.dao.IUserDao;
+import com.lagou.dao.impl.IUserDaoImpl;
 import com.lagou.pojo.User;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
@@ -23,5 +25,80 @@ public class TestDemo {
         for (int i = 0; i < users.size(); i++) {
             System.out.println(users.get(i));
         }
+        sqlSession.close();
+    }
+
+    @Test
+    public void testAddUser() throws IOException {
+        InputStream resourceAsStream = Resources.getResourceAsStream("sqlMapConfig.xml");
+        SqlSessionFactory build = new SqlSessionFactoryBuilder().build(resourceAsStream);
+        SqlSession sqlSession = build.openSession();
+        User user = new User();
+        user.setId(3);
+        user.setUsername("王五");
+        sqlSession.insert("com.lagou.dao.IUserDao.insertUser",user);
+        sqlSession.commit();
+        sqlSession.close();
+    }
+
+    @Test
+    public void testUpdateUser() throws IOException {
+        InputStream resourceAsStream = Resources.getResourceAsStream("sqlMapConfig.xml");
+        SqlSessionFactory build = new SqlSessionFactoryBuilder().build(resourceAsStream);
+        SqlSession sqlSession = build.openSession();
+        User user = new User();
+        user.setId(3);
+        user.setUsername("jack");
+        sqlSession.update("userMapper.updateUser",user);
+        sqlSession.commit();
+        sqlSession.close();
+    }
+
+    @Test
+    public void testDeleteUser() throws IOException {
+        InputStream resourceAsStream = Resources.getResourceAsStream("sqlMapConfig.xml");
+        SqlSessionFactory build = new SqlSessionFactoryBuilder().build(resourceAsStream);
+        SqlSession sqlSession = build.openSession();
+
+        sqlSession.delete("com.lagou.dao.IUserDao.deleteUser",1);
+        sqlSession.commit();
+        sqlSession.close();
+    }
+
+    @Test
+    public void test1() throws IOException {
+        IUserDao userDao = new IUserDaoImpl();
+        List<User> all = userDao.findAll();
+        for (User user : all) {
+            System.out.println(user);
+        }
+    }
+
+
+    @Test
+    public void test2() throws IOException {
+        InputStream resourceAsStream = Resources.getResourceAsStream("sqlMapConfig.xml");
+        SqlSessionFactory build = new SqlSessionFactoryBuilder().build(resourceAsStream);
+        SqlSession sqlSession = build.openSession();
+        IUserDao mapper = sqlSession.getMapper(IUserDao.class);
+        List<User> all = mapper.findAll();
+        for (User user : all) {
+            System.out.println(user);
+        }
+    }
+
+
+
+
+    @Test
+    public void test3() throws IOException {
+        InputStream resourceAsStream = Resources.getResourceAsStream("sqlMapConfig.xml");
+        SqlSessionFactory build = new SqlSessionFactoryBuilder().build(resourceAsStream);
+        SqlSession sqlSession = build.openSession();
+        IUserDao mapper = sqlSession.getMapper(IUserDao.class);
+        User user = new User();
+        user.setUsername("张三");
+        User all = mapper.findCondition(user);
+        System.out.println(all);
     }
 }
