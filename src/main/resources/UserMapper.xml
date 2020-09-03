@@ -31,4 +31,13 @@
     <delete id="deleteUser" parameterType="integer">
         delete from user where id=#{id}
     </delete>
+
+    <select id="findUserByIds" parameterType="list" resultType="user">
+        select * from user
+            <where>
+                <foreach collection="list" open="id in (" item="item" close=")" separator=",">
+                    #{item.id}
+                </foreach>
+            </where>
+    </select>
 </mapper>

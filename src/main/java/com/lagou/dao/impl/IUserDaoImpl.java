@@ -27,4 +27,8 @@ public class IUserDaoImpl implements IUserDao {
     public User findCondition(User user) {
         return null;
     }
+
+    public List<User> findUserByIds(List<User> users) {
+        return null;
+    }
 }

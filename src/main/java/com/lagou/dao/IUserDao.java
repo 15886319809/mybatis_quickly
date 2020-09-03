@@ -9,4 +9,7 @@ public interface IUserDao {
     public List<User>findAll() throws IOException;
 
     public User findCondition(User user);
+
+
+    public List<User>findUserByIds(List<User> users);
 }

@@ -5,12 +5,14 @@ import com.lagou.dao.impl.IUserDaoImpl;
 import com.lagou.pojo.User;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionException;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.Test;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 public class TestDemo {
@@ -100,5 +102,24 @@ public class TestDemo {
         user.setUsername("张三");
         User all = mapper.findCondition(user);
         System.out.println(all);
+    }
+
+    @Test
+    public void test4() throws IOException {
+        InputStream resourceAsStream = Resources.getResourceAsStream("sqlMapConfig.xml");
+        SqlSessionFactory build = new SqlSessionFactoryBuilder().build(resourceAsStream);
+        SqlSession sqlSession = build.openSession();
+        IUserDao mapper = sqlSession.getMapper(IUserDao.class);
+        User user = new User();
+        user.setId(1);
+        User user1 = new User();
+        user1.setId(3);
+        List<User>list = new ArrayList<User>();
+        list.add(user);
+        list.add(user1);
+        List<User> userByIds = mapper.findUserByIds(list);
+        for (User userById : userByIds) {
+            System.out.println(userById);
+        }
     }
 }
